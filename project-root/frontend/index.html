@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>运营商资料查看系统</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 顶部banner区域 -->
+        <div class="banner">
+            <!-- 轮播图容器 -->
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <img src="./img/轮播图1.jpg" alt="轮播图1" class="active">
+                    <img src="./img/轮播图2.jpg" alt="轮播图2">
+                    <img src="./img/轮播图3.jpg" alt="轮播图3">
+                </div>
+                <!-- 轮播图指示器 -->
+                <div class="carousel-indicators">
+                    <span class="indicator active" data-index="0"></span>
+                    <span class="indicator" data-index="1"></span>
+                    <span class="indicator" data-index="2"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 运营商选择区域 - 包含6个运营商选项 -->
+        <div class="operator-list">
+            <!-- 全部产品选项 - 默认激活状态 -->
+            <div class="operator-item all active">
+                <img src="./img/全部.png" alt="全部">
+                <span>全部产品</span>
+            </div>
+            <!-- 中国联通选项 -->
+            <div class="operator-item unicom">
+                <img src="./img/中国联通 (1).png" alt="联通">
+                <span>中国联通</span>
+            </div>
+            <!-- 中国移动选项 -->
+            <div class="operator-item mobile">
+                <img src="./img/中国移动.png" alt="移动">
+                <span>中国移动</span>
+            </div>
+            <!-- 中国电信选项 -->
+            <div class="operator-item telecom">
+                <img src="./img/中国电信.png" alt="电信">
+                <span>中国电信</span>
+            </div>
+            <!-- 中国广电选项 -->
+            <div class="operator-item broadcast">
+                <img src="./img/中国广电.png" alt="广电">
+                <span>中国广电</span>
+            </div>
+            <!-- 宽带产品选项 -->
+            <div class="operator-item other">
+                <img src="./img/宽带.png" alt="宽带">
+                <span>宽带产品</span>
+            </div>
+        </div>
+
+        <!-- 筛选条件栏 - 包含返现类型筛选和搜索 -->
+        <div class="filter-bar">
+            <!-- 秒返选项 - 默认激活状态 -->
+            <div class="filter-item active">秒返</div>
+            <!-- 月返选项 -->
+            <div class="filter-item">月返</div>
+            <!-- 已下架选项 -->
+            <div class="filter-item">已下架</div>
+            <!-- 搜索图标 -->
+            <div class="search-icon">
+                <img src="./img/搜索.png" alt="搜索">
+            </div>
+        </div>
+
+        <!-- 产品列表头部 - 显示产品数量和操作按钮 -->
+        <div class="product-header">
+            <!-- 显示当前产品数量 -->
+            <div class="product-count">当前显示：<span id="productCount">3</span> 个产品</div>
+            <!-- 操作按钮组 -->
+            <div class="product-actions">
+                <!-- 导出表格按钮 -->
+                <button class="export-btn">导出表格</button>
+                <!-- 分享资料按钮 -->
+                <button class="share-btn">分享资料</button>
+            </div>
+        </div>
+
+        <!-- 产品列表容器 - 通过JavaScript动态渲染产品 -->
+        <div class="product-list" id="productList">
+            <!-- 产品项会通过JavaScript动态添加 -->
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="./js/main.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</body>
+</html> 

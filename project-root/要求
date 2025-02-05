@@ -1,0 +1,32 @@
+project-root/
+├── frontend/                # 前台展示
+│   ├── css/                # 原有的CSS文件
+│   │   └── style.css  
+│   ├── js/                 # 原有的JS文件
+│   │   └── main.js
+│   ├── img/               # 图片资源
+│   │   ├── 轮播图1.jpg
+│   │   ├── 轮播图2.jpg
+│   │   └── ...
+│   └── index.html         # 原有的前台页面
+│
+├── admin/                  # 后台管理
+│   ├── css/
+│   │   └── admin.css      # 后台样式
+│   ├── js/
+│   │   ├── admin.js       # 后台主要逻辑
+│   │   ├── products.js    # 产品管理
+│   │   ├── carousel.js    # 轮播图管理
+│   │   └── auth.js        # 认证相关
+│   └── index.html         # 后台管理页面
+│
+├── data/                   # 模拟数据存储
+│   ├── products.js        # 产品数据
+│   ├── carousel.js        # 轮播图数据
+│   └── admin.js           # 管理员数据
+│
+└── uploads/               # 上传文件存储
+    ├── products/          # 产品图片
+    ├── carousel/          # 轮播图
+    └── avatars/          # 管理员头像
+    这是目前已经创建好的目录大致格式你可以自由添加

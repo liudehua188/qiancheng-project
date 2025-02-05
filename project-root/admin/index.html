@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <!-- 引入main.js，这样可以访问产品数据 -->
+    <script src="../frontend/js/main.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="admin-info">
+                <div class="avatar-container">
+                    <img src="../uploads/avatars/default-avatar.png" alt="管理员头像" id="adminAvatar">
+                </div>
+                <div class="admin-name">管理员</div>
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="#" data-page="dashboard" class="active">控制台</a></li>
+                    <li><a href="#" data-page="products">产品管理</a></li>
+                    <li><a href="#" data-page="carousel">轮播图管理</a></li>
+                    <li><a href="#" data-page="account">账号设置</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 主要内容区 -->
+        <div class="main-content">
+            <div class="header">
+                <div class="breadcrumb">控制台</div>
+                <div class="user-menu">
+                    <span id="currentUser">admin</span>
+                    <a href="#" id="logout">退出</a>
+                </div>
+            </div>
+            
+            <!-- 内容展示区 -->
+            <div class="content-area">
+                <!-- 控制台页面 -->
+                <div id="dashboard" class="page active">
+                    <h2>欢迎使用后台管理系统</h2>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <h3>产品总数</h3>
+                            <p id="totalProducts">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>轮播图数量</h3>
+                            <p id="totalCarousel">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品管理页面 -->
+                <div id="products" class="page">
+                    <div class="page-header">
+                        <h2>产品管理</h2>
+                        <button class="btn-primary" onclick="showAddProductModal()">添加产品</button>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="productSearch" placeholder="搜索产品...">
+                        <select id="productFilter">
+                            <option value="all">全部状态</option>
+                            <option value="在售">在售</option>
+                            <option value="offline">已下架</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>产品图片</th>
+                                    <th>产品名称</th>
+                                    <th>运营商</th>
+                                    <th>月租</th>
+                                    <th>状态</th>
+                                    <th>上架时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productList">
+                                <!-- 产品列表将通过JavaScript动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination" id="productPagination">
+                        <!-- 分页控件将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- 产品表单模板 -->
+    <template id="productFormTemplate">
+        <form id="productForm" class="form-container">
+            <h3 class="form-title">添加产品</h3>
+            <div class="form-group">
+                <label for="productId">产品ID</label>
+                <input type="text" id="productId" name="id" required placeholder="格式：P001">
+            </div>
+            <div class="form-group">
+                <label for="productTitle">产品标题</label>
+                <input type="text" id="productTitle" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="productOperator">运营商</label>
+                <select id="productOperator" name="operator" required>
+                    <option value="">请选择运营商</option>
+                    <option value="中国联通">中国联通</option>
+                    <option value="中国移动">中国移动</option>
+                    <option value="中国电信">中国电信</option>
+                    <option value="中国广电">中国广电</option>
+                    <option value="宽带产品">宽带产品</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="productMonthlyFee">月租费用</label>
+                <input type="text" id="productMonthlyFee" name="monthlyFee" required placeholder="例如：28元/月">
+            </div>
+            <div class="form-group">
+                <label for="packageDetails">套餐详情</label>
+                <textarea id="packageDetails" name="packageDetails" rows="4" required 
+                    placeholder="例如：包含100GB全国通用流量，500分钟通话时长，超出按0.15元/分钟计费"></textarea>
+            </div>
+            <div class="form-group">
+                <label>选号功能</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="numberSelection" value="true" checked> 支持</label>
+                    <label><input type="radio" name="numberSelection" value="false"> 不支持</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="contractRules">合约规则</label>
+                <textarea id="contractRules" name="contractRules" rows="3" required
+                    placeholder="例如：合约期12个月，合约期内注销需支付违约金200元；合约期满后可免费注销"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="age">年龄限制</label>
+                <input type="text" id="age" name="age" required placeholder="例如：18-30周岁">
+            </div>
+            <div class="form-group">
+                <label for="location">归属地</label>
+                <input type="text" id="location" name="location" required placeholder="例如：浙江">
+            </div>
+            <div class="form-group">
+                <label for="forbiddenAreas">禁发区域</label>
+                <input type="text" id="forbiddenAreas" name="forbiddenAreas" 
+                    value="新疆,西藏,港澳台" required>
+            </div>
+            <div class="form-group">
+                <label for="commissionType">返佣类型</label>
+                <select id="commissionType" name="commission.type" required>
+                    <option value="instant">秒返</option>
+                    <option value="monthly">月返</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="commissionAmount">返佣金额</label>
+                <input type="text" id="commissionAmount" name="commission.amount" required placeholder="例如：100元">
+            </div>
+            <div class="form-group">
+                <label for="commissionRules">返佣规则</label>
+                <textarea id="commissionRules" name="commission.rules" rows="2" required
+                    placeholder="例如：用户激活后，商家获得100元返佣"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="settlementRules">结算规则</label>
+                <input type="text" id="settlementRules" name="settlementRules" 
+                    value="首充达标，次月不注销" required>
+            </div>
+            <div class="form-group">
+                <label>是否省内产品</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="isProvincialProduct" value="false" checked> 否</label>
+                    <label><input type="radio" name="isProvincialProduct" value="true"> 是</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productImage">产品图片</label>
+                <input type="file" id="productImage" name="image" accept="image/*">
+                <div id="imagePreview" class="image-preview"></div>
+            </div>
+            <div class="form-group">
+                <label for="tags">标签</label>
+                <input type="text" id="tags" name="tags" placeholder="用逗号分隔，例如：限时优惠,大流量">
+            </div>
+            <div class="form-group">
+                <label for="productStatus">状态</label>
+                <select id="productStatus" name="status" required>
+                    <option value="在售">在售</option>
+                    <option value="offline">已下架</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">保存</button>
+                <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+            </div>
+        </form>
+    </template>
+
+    <!-- 产品详情模板 -->
+    <template id="productDetailTemplate">
+        <div class="product-detail">
+            <h3 class="detail-title">产品详情</h3>
+            <div class="detail-content">
+                <div class="detail-section">
+                    <div class="detail-item">
+                        <label>产品ID：</label>
+                        <span class="product-id"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>产品名称：</label>
+                        <span class="product-title"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>运营商：</label>
+                        <span class="product-operator"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>月租费用：</label>
+                        <span class="product-monthly-fee"></span>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-item">
+                        <label>套餐详情：</label>
+                        <p class="product-package-details"></p>
+                    </div>
+                    <div class="detail-item">
+                        <label>合约规则：</label>
+                        <p class="product-contract-rules"></p>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-item">
+                        <label>年龄限制：</label>
+                        <span class="product-age"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>选号功能：</label>
+                        <span class="product-number-selection"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>归属地：</label>
+                        <span class="product-location"></span>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-item">
+                        <label>禁发区域：</label>
+                        <span class="product-forbidden-areas"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>返佣类型：</label>
+                        <span class="product-commission-type"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>返佣规则：</label>
+                        <p class="product-commission-rules"></p>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-item">
+                        <label>结算规则：</label>
+                        <span class="product-settlement-rules"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>是否省内：</label>
+                        <span class="product-provincial"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>标签：</label>
+                        <div class="product-tags"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/carousel.js"></script>
+</body>
+</html>
